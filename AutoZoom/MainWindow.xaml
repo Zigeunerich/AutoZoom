@@ -1,0 +1,23 @@
+﻿<Window x:Class="AutoZoom.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoZoom"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <DatePicker x:Name="_datePickerStart" SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="71,35,0,0" VerticalAlignment="Top" Height="26" Width="133"/>
+        <Button Content="Schedule" Command="{Binding AddCommand}" HorizontalAlignment="Left" Height="28" Margin="413,144,0,0" VerticalAlignment="Top" Width="103"/>
+        <DatePicker x:Name="_datePickerEnd" SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="336,35,0,0" VerticalAlignment="Top" Height="26" Width="133"/>
+        <Label Content="Start" HorizontalAlignment="Left" Margin="37,35,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
+        <Label Content="Ende" HorizontalAlignment="Left" Margin="300,35,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.031,0.705"/>
+        <TextBox x:Name="_idTextBox" Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="112,80,0,0"  TextWrapping="NoWrap" VerticalAlignment="Top" Width="133"/>
+        <Label Content="Meeting Id:" HorizontalAlignment="Left" Margin="37,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="274,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
+        <TextBox x:Name="_passwordTextBox" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="336,80,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="133"/>
+        <TextBox x:Name="_startTimeTextBox" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="209,35,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="57"/>
+        <TextBox x:Name="_endTimeTextBox" Text="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="474,35,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="57"/>
+
+    </Grid>
+</Window>
