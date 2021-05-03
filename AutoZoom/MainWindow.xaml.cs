@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WindowsInput;
+using WindowsInput.Native;
 using ZoomNet;
 
 namespace AutoZoom
@@ -22,6 +23,12 @@ namespace AutoZoom
     /// </summary>
     public partial class MainWindow : Window
     {
+        Dictionary<Meeting, Process> _activeMeetings = new();
+        InputSimulator _inputSimulator = new InputSimulator();
+        MeetingScheduler _meetingScheduler = new();
+
+        string _zoomPath = Environment.ExpandEnvironmentVariables(@"%APPDATA%\Zoom\bin\Zoom.exe");
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,21 +43,25 @@ namespace AutoZoom
         {
             if (_activeMeetings.TryGetValue(meeting, out var zoomProcess))
             {
+                // Stop recording using ALT+F9
+                _inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.MENU, VirtualKeyCode.F9);
+
+                // Kill Zoom process
                 zoomProcess.Kill(true);
+
+                // Remove from active meetings
                 _activeMeetings.Remove(meeting);
             }
         }
-
-        Dictionary<Meeting, Process> _activeMeetings = new();
-
-        string _zoomPath = Environment.ExpandEnvironmentVariables(@"%APPDATA%\Zoom\bin\Zoom.exe");
 
         private void MeetingScheduler_MeetingStarted(object sender, Meeting meeting)
         {
             Task.Factory.StartNew(async () =>
             {
+                // Build url from meeting id
                 var url = string.Format($"zoommtg://zoom.us/join?action=join&confno={meeting.ID}");
 
+                // Start zoom process with url as command line parameter
                 var zoomProcess = Process.Start(new ProcessStartInfo()
                 {
                     FileName = _zoomPath,
@@ -58,22 +69,34 @@ namespace AutoZoom
                     UseShellExecute = false
                 });
 
+                // Add to active meetings
                 _activeMeetings.Add(meeting, zoomProcess);
 
+                // Wait for Zoom to join meeting
                 await Task.Delay(15000);
 
+                // If password is set, enter and confirm
                 if (meeting.Password != null)
                 {
                     _inputSimulator.Keyboard.TextEntry(meeting.Password);
 
                     await Task.Delay(500);
+
+                    _inputSimulator.Keyboard.KeyPress(VirtualKeyCode.RETURN);
                 }
 
-                _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.RETURN);
+                await Task.Delay(10000);
+
+                // Set Zoom to full screen using ALT+F
+
+                _inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.MENU, VirtualKeyCode.VK_F);
+
+                await Task.Delay(10000);
+
+                // Start recording using ALT+F9
+
+                _inputSimulator.Keyboard.ModifiedKeyStroke(VirtualKeyCode.MENU, VirtualKeyCode.F9);
             });
         }
-
-        InputSimulator _inputSimulator = new InputSimulator();
-        MeetingScheduler _meetingScheduler = new();
     }
 }
