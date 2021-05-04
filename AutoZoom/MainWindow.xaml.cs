@@ -29,6 +29,9 @@ namespace AutoZoom
 
         string _zoomPath = Environment.ExpandEnvironmentVariables(@"%APPDATA%\Zoom\bin\Zoom.exe");
 
+        public AddMeetingViewModel AddMeeting { get; }
+        public ScheduledMeetingsViewModel ScheduledMeetings { get; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,7 +39,10 @@ namespace AutoZoom
             _meetingScheduler.MeetingStarted += MeetingScheduler_MeetingStarted;
             _meetingScheduler.MeetingFinished += MeetingScheduler_MeetingFinished;
 
-            this.DataContext = new AddMeetingViewModel(_meetingScheduler);
+            DataContext = this;
+
+            AddMeeting = new AddMeetingViewModel(_meetingScheduler);
+            ScheduledMeetings = new(_meetingScheduler);
         }
 
         private void MeetingScheduler_MeetingFinished(object sender, Meeting meeting)

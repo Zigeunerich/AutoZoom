@@ -5,19 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoZoom"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <DatePicker x:Name="_datePickerStart" SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="71,35,0,0" VerticalAlignment="Top" Height="26" Width="133"/>
-        <Button Content="Schedule" Command="{Binding AddCommand}" HorizontalAlignment="Left" Height="28" Margin="413,144,0,0" VerticalAlignment="Top" Width="103"/>
-        <DatePicker x:Name="_datePickerEnd" SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="336,35,0,0" VerticalAlignment="Top" Height="26" Width="133"/>
-        <Label Content="Start" HorizontalAlignment="Left" Margin="37,35,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
-        <Label Content="Ende" HorizontalAlignment="Left" Margin="300,35,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.031,0.705"/>
-        <TextBox x:Name="_idTextBox" Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="112,80,0,0"  TextWrapping="NoWrap" VerticalAlignment="Top" Width="133"/>
-        <Label Content="Meeting Id:" HorizontalAlignment="Left" Margin="37,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
-        <Label Content="Password:" HorizontalAlignment="Left" Margin="274,79,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
-        <TextBox x:Name="_passwordTextBox" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="336,80,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="133"/>
-        <TextBox x:Name="_startTimeTextBox" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="209,35,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="57"/>
-        <TextBox x:Name="_endTimeTextBox" Text="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="474,35,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="57"/>
+        Title="AutoZoom" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <Grid Margin="25">
+        <Grid DataContext="{Binding AddMeeting}">
+            <DatePicker x:Name="_datePickerStart" SelectedDate="{Binding StartDate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="66,74,0,0" VerticalAlignment="Top" Height="26" Width="133"/>
+            <Button Content="Schedule" Command="{Binding AddCommand}" HorizontalAlignment="Left" Height="28" Margin="420,169,0,0" VerticalAlignment="Top" Width="104"/>
+            <DatePicker x:Name="_datePickerEnd" SelectedDate="{Binding EndDate, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="309,74,0,0" VerticalAlignment="Top" Height="26" Width="133"/>
+            <Label Content="Start:" HorizontalAlignment="Left" Margin="19,74,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
+            <Label Content="End:" HorizontalAlignment="Left" Margin="271,73,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.031,0.705"/>
+            <TextBox x:Name="_idTextBox" Text="{Binding ID, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="100,119,0,0"  TextWrapping="NoWrap" VerticalAlignment="Top" Width="161"/>
+            <Label Content="Meeting Id:" HorizontalAlignment="Left" Margin="19,118,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.053,0.665"/>
+            <Label Content="Password:" HorizontalAlignment="Left" Margin="270,118,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.473,0.652"/>
+            <TextBox x:Name="_passwordTextBox" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="337,118,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="167"/>
+            <TextBox x:Name="_startTimeTextBox" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="204,74,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="57"/>
+            <TextBox x:Name="_endTimeTextBox" Text="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="447,74,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="57"/>
+            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalContentAlignment="Center" Height="25" Margin="66,31,0,0"  TextWrapping="NoWrap" VerticalAlignment="Top" Width="331"/>
+            <Label Content="Name:" HorizontalAlignment="Left" Margin="19,31,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+        </Grid>
 
+        <DataGrid DataContext="{Binding ScheduledMeetings}" ItemsSource="{Binding Meetings}" AutoGenerateColumns="False"
+                  IsReadOnly="True" SelectedItem="{Binding SelectedMeeting}" HorizontalAlignment="Center" Height="169" Margin="0,230,0,0" VerticalAlignment="Top" Width="556">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" />
+
+                <DataGridTemplateColumn Header="Start date">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding StartDate}" BorderThickness="0" IsEnabled="False"  />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Start time" Binding="{Binding StartTime}" />
+
+                <DataGridTemplateColumn Header="End date">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding EndDate}" BorderThickness="0" IsEnabled="False" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="End time" Binding="{Binding EndTime}"  />
+            </DataGrid.Columns>
+            <DataGrid.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding DeleteCommand}"/>
+            </DataGrid.InputBindings>
+        </DataGrid>
     </Grid>
 </Window>

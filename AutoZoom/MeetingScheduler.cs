@@ -6,7 +6,7 @@ namespace AutoZoom
 {
     public class MeetingScheduler
     {
-        readonly Dictionary<Meeting, (Timer, Timer)> _meetings = new();
+        readonly Dictionary<Meeting, (Timer startTimer, Timer endTimer)> _meetings = new();
 
         public void AddMeeting(Meeting meeting)
         {
@@ -20,8 +20,23 @@ namespace AutoZoom
                 && endTimer.Change(msUntilMeetingEnd, Timeout.Infinite))
             {
                 _meetings.Add(meeting, (startTimer, endTimer));
+                MeetingAdded?.Invoke(this, meeting);
             }
         }
+
+        public void RemoveMeeting(Meeting meeting)
+        {
+            if (_meetings.TryGetValue(meeting, out var timers))
+            {
+                _meetings.Remove(meeting);
+                timers.startTimer.Dispose();
+                timers.endTimer.Dispose();
+                MeetingRemoved?.Invoke(this, meeting);
+            }
+        }
+
+        public event EventHandler<Meeting> MeetingAdded;
+        public event EventHandler<Meeting> MeetingRemoved;
 
         public event EventHandler<Meeting> MeetingStarted;
         public event EventHandler<Meeting> MeetingFinished;
